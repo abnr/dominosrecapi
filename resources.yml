@@ -1,0 +1,9 @@
+Conditions:
+  EnvStaging : !Equals [ "${self:custom.stage}", "staging"]
+  EnvProd : !Equals [ "${self:custom.stage}", "prod"]
+  CreateResource: !Or [Condition: "EnvStaging", Condition: "EnvProd"]
+Resources:
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      TopicName: "#{AWS::StackName}-alarm"

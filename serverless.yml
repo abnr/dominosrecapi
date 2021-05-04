@@ -3,15 +3,29 @@ service: dominosrecapii
 plugins:
   - serverless-python-requirements
   - serverless-wsgi
+  - serverless-plugin-aws-alerts
+  - serverless-pseudo-parameters
 
 custom:
   stage: ${opt:stage, self:provider.stage}
+  region: ${opt:region, self:provider.region}
   wsgi:
     app: server.app
     packRequirements: false
   pythonRequirements:
     dockerizePip: non-linux
     zip: true
+  alerts:
+    stages:
+      - prod
+      - staging
+    topics:
+      ok: 
+        topic: arn:aws:sns:${self:custom.region}:#{AWS::AccountId}:#{AWS::StackName}-alarm
+      alarm:
+        topic: arn:aws:sns:${self:custom.region}:#{AWS::AccountId}:#{AWS::StackName}-alarm
+      insufficientData:
+        topic: arn:aws:sns:${self:custom.region}:#{AWS::AccountId}:#{AWS::StackName}-alarm
 
 provider:
   name: aws
@@ -22,16 +36,32 @@ provider:
   apiGateway:
     apiKeySourceType: HEADER
     metrics: true
+    apiKeys:
+    - ${self:service}-${self:custom.stage}
   logs:
     restApi: true
-  apiKeys:
-    - ${self:service}-${self:custom.stage}
+  
 
 functions:
   app:
     handler: wsgi_handler.handler
+    timeout: 30
+    memorySize: 1024
     events:
       - http:
           path: '/{proxy+}'
           method: any
           private: true
+    alarms:
+      - functionDuration
+      - name: functionDuration
+        threshold: 30000
+        description: ${self:service}-${self:custom.stage}-app Lambda Timeout - WARNING
+      - functionErrors
+      - name: functionErrors 
+        description: ${self:service}-${self:custom.stage}-app Lambda Error - ERROR
+      - functionThrottles
+      - name: functionThrottles 
+        description: ${self:service}-${self:custom.stage}-app Lambda Throttle - ERROR
+
+resources: ${file(resources.yml)}
