@@ -1,0 +1,24 @@
+{
+  "name": "dominosrecapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abnr/dominosrecapi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abnr/dominosrecapi/issues"
+  },
+  "homepage": "https://github.com/abnr/dominosrecapi#readme",
+  "dependencies": {
+    "serverless": "^2.39.1",
+    "serverless-python-requirements": "^5.1.1",
+    "serverless-wsgi": "^1.7.7"
+  }
+}

@@ -1,0 +1,37 @@
+service: dominosrecapii
+
+plugins:
+  - serverless-python-requirements
+  - serverless-wsgi
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  wsgi:
+    app: server.app
+    packRequirements: false
+  pythonRequirements:
+    dockerizePip: non-linux
+    zip: true
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: dev
+  region: us-east-1
+  endpointType: REGIONAL
+  apiGateway:
+    apiKeySourceType: HEADER
+    metrics: true
+  logs:
+    restApi: true
+  apiKeys:
+    - ${self:service}-${self:custom.stage}
+
+functions:
+  app:
+    handler: wsgi_handler.handler
+    events:
+      - http:
+          path: '/{proxy+}'
+          method: any
+          private: true

@@ -1,3 +1,8 @@
+try:
+  import unzip_requirements
+except ImportError:
+  pass
+
 from flask import Flask, request
 from flask_restful import reqparse, abort, Api, Resource
 import pickle
