@@ -60,7 +60,18 @@ class sobremesas(Resource):
 		data = request.get_json(force=True)
 		if len(data['pizzas']) == 0:
 			return {'suggestao':0}
-		
+		# de-para com os nomes das pizzas
+		for i in range(len(data['pizzas'])):
+			if data['pizzas'][i] == 'egg and bacon':
+				data['pizzas'][i] = 'Grande Trad. Egg Bacon'
+			elif data['pizzas'][i] == 'corn and bacon':
+				data['pizzas'][i] = 'Grande Trad. Corn Bacon'
+			elif data['pizzas'][i] == 'frango com cream cheese':
+				data['pizzas'][i] = 'Grande Trad. Fr. Philadelphia'
+			elif data['pizzas'][i] == 'frango com requeijão':
+				data['pizzas'][i] = 'Grande Trad. Frango c/ Requeijão'
+			else:
+				data['pizzas'][i] = 'Grande Trad. ' + data['pizzas'][i].title()
 		sobremesas_ret = []
 		for pair in apriori:
 			if len(pair[0]) == len(data['pizzas']):
