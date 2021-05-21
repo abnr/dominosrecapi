@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/abnr/dominosrecapi#readme",
   "dependencies": {
-    "serverless": "^2.39.1",
+    "serverless": "^2.41.2",
     "serverless-plugin-aws-alerts": "^1.7.3",
     "serverless-pseudo-parameters": "^2.5.0",
     "serverless-python-requirements": "^5.1.1",
